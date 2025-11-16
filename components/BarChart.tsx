@@ -174,7 +174,14 @@ const BarChart = ({ records }: { records: Record[] }) => {
               item.categories.length > 1
                 ? `Categories: ${item.categories.join(', ')}`
                 : `Category: ${item.categories[0]}`;
-            return [`Total: $${item.amount.toFixed(2)}`, categoriesText];
+            return [
+            `Total: ${item.amount.toLocaleString('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+            })}`,
+            categoriesText,
+            ];
+
           },
         },
       },
@@ -205,7 +212,7 @@ const BarChart = ({ records }: { records: Record[] }) => {
       y: {
         title: {
           display: true,
-          text: 'Amount ($)',
+          text: 'Amount (Rp)',
           font: {
             size: isMobile ? 12 : 16, // Smaller font on mobile
             weight: 'bold' as const,
@@ -218,8 +225,13 @@ const BarChart = ({ records }: { records: Record[] }) => {
           },
           color: isDark ? '#9ca3af' : '#7f8c8d', // Gray y-axis labels
           callback: function (value: string | number) {
-            return '$' + value; // Add dollar sign to y-axis labels
-          },
+            const n = typeof value === 'number' ? value : Number(value);
+            return n.toLocaleString('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                maximumFractionDigits: 0, // bebas mau 0 atau 2
+            });
+            },
         },
         grid: {
           color: isDark ? '#374151' : '#e0e0e0', // Dark mode grid lines
